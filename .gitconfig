@@ -1,0 +1,13 @@
+[core]
+	excludesfile = /home/vagrant/.gitignore_global
+[alias]
+	br = branch
+	st = status
+	co = checkout
+	sw = switch
+[user]
+	email = satake.ts@gmail.com
+	name = satake
+[ghq]
+	root = ~/src
+	root = ~/go/src
