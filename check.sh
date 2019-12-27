@@ -1,7 +1,10 @@
 #!/bin/bash
+set -o errexit
+set -o nounset
+set -o pipefail
 
-REPO_ROOT="$(realpath $(dirname $0))"
-DOTFILES=$(find "${REPO_ROOT}" -not -path '*git/*' -and -type f -name '.*')
+readonly REPO_ROOT="$(realpath $(dirname $0))"
+readonly DOTFILES=$(find ./ -type f -name '.*' | xargs -I{} basename {})
 
 for dotfile in ${DOTFILES}; do
   dotfilename=$(basename "${dotfile}")
