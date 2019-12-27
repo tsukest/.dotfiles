@@ -9,8 +9,8 @@ source ~/.git-completion.bash
 source ~/.git-prompt.sh
 
 alias ls='ls --color=auto'
-PS1='[\u@\h \W]\$ '
 
+PS1='\[\033[01;34m\]\w\033[01;32m\]$(__git_ps1 "(%s)")\[\033[00m\]\$ '
 IGNOREEOF=100
 
 function pghql() {
