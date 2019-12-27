@@ -9,5 +9,5 @@
 	email = satake.ts@gmail.com
 	name = satake
 [ghq]
-	root = ~/src
 	root = ~/go/src
+	root = ~/src

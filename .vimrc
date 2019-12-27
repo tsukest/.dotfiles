@@ -16,10 +16,11 @@ Plug 'majutsushi/tagbar'
 " lang
 Plug 'mattn/vim-goimports'
 " lsp
-Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
 call plug#end()
 
 syntax on
