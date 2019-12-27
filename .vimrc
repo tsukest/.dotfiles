@@ -1,102 +1,106 @@
-set encoding=utf-8
+set backspace=indent,eol,start
+set hlsearch
 set cursorline
-set laststatus=2
-set showmatch
-set title
-set ruler
+set autoindent
+set expandtab
 set tabstop=4
 set shiftwidth=4
-set incsearch
-set hlsearch
-set backspace=indent,eol,start
-set noswapfile
-set noshowmode
 
+au FileType json,yaml,sh,markdown set tabstop=2 shiftwidth=2
+au FileType markdown set wrap
 
-" ---------- Start setting up Vundle.vim ----------
 call plug#begin('~/.vim/plugged')
-
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'cocopon/iceberg.vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'itchyny/lightline.vim'
-" vim-lsp
-Plug 'prabirshrestha/async.vim'
+Plug 'majutsushi/tagbar'
+" lang
+Plug 'mattn/vim-goimports'
+" lsp
 Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
-" go
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-" rust
-Plug 'rust-lang/rust.vim'
-Plug 'racer-rust/vim-racer'
-" elixir
-Plug 'elixir-editors/vim-elixir'
-
 call plug#end()
-" ---------- End of Vundle.vim setting ----------
 
+syntax on
+let g:dracula_italic = 0
+colorscheme dracula
 
-colorscheme iceberg
-let g:lightline = {
-      \ 'colorscheme': 'iceberg',
-      \ }
+" lightline
+set laststatus=2
+let g:lightline = { 'colorscheme': 'dracula', }
 
-" vim-lsp
+" lsp
+let g:lsp_async_completion = 1
+
 if executable('gopls')
   augroup LspGo
     au!
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'gopls',
-        \ 'cmd': {server_info->['gopls']},
+        \ 'cmd': {server_info->['gopls', '-mode', 'stdio']},
         \ 'whitelist': ['go'],
         \ 'workspace_config': {'gopls': {
-        \     'hoverKind': 'SingleLine',
-        \     'usePlaceholders': v:true,
         \     'completeUnimported': v:true,
+        \     'caseSensitiveCompletion': v:true,
+        \     'usePlaceholders': v:true,
+        \     'completionDocumentation': v:true,
+        \     'watchFileChanges': v:true,
+        \     'hoverKind': 'SingleLine',
         \   }},
         \ })
-    autocmd FileType go setlocal omnifunc=lsp#complete
-	autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+    autocmd BufWritePre *.go LspDocumentFormatSync
+    autocmd FileType go call s:conf_lsp()
   augroup END
 endif
-if executable('rls')
-  augroup LspRust
+
+if executable('bash-language-server')
+  augroup LspBash
+    au!
     au User lsp_setup call lsp#register_server({
-        \ 'name': 'rls',
-        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-        \ 'whitelist': ['rust'],
-        \ })
-    autocmd FileType rust setlocal omnifunc=lsp#complete
-	autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+      \ 'name': 'bash-language-server',
+      \ 'cmd': {server_info->[&shell, &shellcmdflag, 'bash-language-server start']},
+      \ 'whitelist': ['sh'],
+      \ })
+    autocmd FileType sh call s:conf_lsp()
   augroup END
 endif
-let g:lsp_async_completion = 1
-let g:lsp_diagnostics_enabled = 0
-
-" vim-go
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_fmt_command = "goimports"
-
-" rust.vim
-let g:rustfmt_autosave = 1
-" vim-racer
-set hidden
-let g:racer_cmd = "$HOME/.cargo/bin/racer"
-autocmd FileType rust nmap <C-]> <Plug>(rust-def)
-autocmd FileType rust nmap gs <Plug>(rust-def-split)
-autocmd FileType rust nmap gx <Plug>(rust-def-vertical)
-autocmd FileType rust nmap <leader>gd <Plug>(rust-doc)
-
-" shell
-autocmd BufNewFile,BufRead *.sh setlocal expandtab tabstop=2 shiftwidth=2
-" markdown
-autocmd BufNewFile,BufRead *.md setlocal expandtab tabstop=2 shiftwidth=2
-" yaml
-autocmd BufNewFile,BufRead *.yaml setlocal expandtab tabstop=2 shiftwidth=2
-" html
-autocmd BufNewFile,BufRead *.html setlocal expandtab tabstop=2 shiftwidth=2
+if executable('pyls')
+  augroup LspPython
+    au!
+    au User lsp_setup call lsp#register_server({
+      \ 'name': 'pyls',
+      \ 'cmd': {server_info->['pyls']},
+      \ 'whitelist': ['python'],
+      \ })
+    autocmd FileType python call s:conf_lsp()
+  augroup END
+endif
+if executable('solargraph')
+  augroup LspRuby
+    au!
+    au User lsp_setup call lsp#register_server({
+      \ 'name': 'solargraph',
+      \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+      \ 'initialization_options': {"diagnostics": "true"},
+      \ 'whitelist': ['ruby'],
+      \ })
+    autocmd FileType ruby call s:conf_lsp()
+  augroup END
+endif
+if executable('docker-langserver')
+  augroup LspDockerfile
+    au!
+    au User lsp_setup call lsp#register_server({
+      \ 'name': 'docker-langserver',
+      \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
+      \ 'whitelist': ['dockerfile'],
+      \ })
+  augroup END
+endif
+function! s:conf_lsp() abort
+  setlocal omnifunc=lsp#complete
+  nmap <buffer> <C-]> <plug>(lsp-definition)
+  nmap <buffer> ,n <plug>(lsp-next-error)
+  nmap <buffer> ,p <plug>(lsp-previous-error)
+endfunction
