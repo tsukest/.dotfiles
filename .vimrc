@@ -20,7 +20,6 @@ Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
 call plug#end()
 
 syntax on
@@ -34,29 +33,26 @@ let g:lightline = { 'colorscheme': 'dracula', }
 " lsp
 let g:lsp_async_completion = 1
 
-"if executable('gopls')
-"  augroup LspGo
-"    au!
-"    autocmd User lsp_setup call lsp#register_server({
-"        \ 'name': 'gopls',
-"        \ 'cmd': {server_info->['gopls', '-mode', 'stdio']},
-"        \ 'whitelist': ['go'],
-"        \ 'workspace_config': {'gopls': {
-"        \     'completeUnimported': v:true,
-"        \     'caseSensitiveCompletion': v:true,
-"        \     'usePlaceholders': v:true,
-"        \     'completionDocumentation': v:true,
-"        \     'watchFileChanges': v:true,
-"        \     'hoverKind': 'SingleLine',
-"        \   }},
-"        \ })
-"    autocmd BufWritePre *.go LspDocumentFormatSync
-"    autocmd FileType go call s:conf_lsp()
-"  augroup END
-"endif
-autocmd BufWritePre *.go LspDocumentFormatSync
-autocmd FileType go,c call s:conf_lsp()
-
+if executable('gopls')
+  augroup LspGo
+    au!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'gopls',
+        \ 'cmd': {server_info->['gopls', '-mode', 'stdio']},
+        \ 'whitelist': ['go'],
+        \ 'workspace_config': {'gopls': {
+        \     'completeUnimported': v:true,
+        \     'caseSensitiveCompletion': v:true,
+        \     'usePlaceholders': v:true,
+        \     'completionDocumentation': v:true,
+        \     'watchFileChanges': v:true,
+        \     'hoverKind': 'SingleLine',
+        \   }},
+        \ })
+    autocmd BufWritePre *.go LspDocumentFormatSync
+    autocmd FileType go call s:conf_lsp()
+  augroup END
+endif
 if executable('bash-language-server')
   augroup LspBash
     au!
