@@ -1,5 +1,5 @@
 [core]
-	excludesfile = /home/vagrant/.gitignore_global
+	excludesfile = /home/satake/.gitignore_global
 [alias]
 	br = branch
 	st = status
