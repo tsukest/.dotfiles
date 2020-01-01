@@ -32,7 +32,34 @@ let g:lightline = { 'colorscheme': 'dracula', }
 
 " lsp
 let g:lsp_async_completion = 1
-
+function! s:conf_lsp() abort
+  setlocal omnifunc=lsp#complete
+  nmap <buffer> <C-]> <plug>(lsp-definition)
+  nmap <buffer> ,n <plug>(lsp-next-error)
+  nmap <buffer> ,p <plug>(lsp-previous-error)
+endfunction
+if executable('clangd')
+  augroup LspC
+    au User lsp_setup call lsp#register_server({
+      \ 'name': 'clangd',
+      \ 'cmd': {server_info->['clangd', '-background-index']},
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+      \ })
+    autocmd FileType c call s:conf_lsp()
+  augroup END
+endif
+if executable('rls')
+  augroup LspRust
+    au User lsp_setup call lsp#register_server({
+      \ 'name': 'rls',
+      \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+      \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
+      \ 'whitelist': ['rust'],
+      \ })
+    autocmd BufWritePre *.rs LspDocumentFormatSync
+    autocmd FileType rust call s:conf_lsp()
+  augroup END
+endif
 if executable('gopls')
   augroup LspGo
     au!
@@ -97,9 +124,3 @@ if executable('docker-langserver')
       \ })
   augroup END
 endif
-function! s:conf_lsp() abort
-  setlocal omnifunc=lsp#complete
-  nmap <buffer> <C-]> <plug>(lsp-definition)
-  nmap <buffer> ,n <plug>(lsp-next-error)
-  nmap <buffer> ,p <plug>(lsp-previous-error)
-endfunction
