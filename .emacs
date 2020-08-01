@@ -57,3 +57,9 @@
   (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
   (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
   (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
+
+;; Go
+;; go-mode: https://github.com/dominikh/go-mode.el
+(with-eval-after-load 'go-mode
+  (setq company-backends '(company-capf))
+  (add-hook 'go-mode-hook 'lsp-deferred))
