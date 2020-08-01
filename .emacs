@@ -73,6 +73,5 @@
 ;; Go
 ;; go-mode: https://github.com/dominikh/go-mode.el
 (with-eval-after-load 'go-mode
-  (setq tab-width 4)
   (setq company-backends '(company-capf))
   (add-hook 'go-mode-hook 'lsp-deferred))
