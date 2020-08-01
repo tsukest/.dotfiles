@@ -22,7 +22,19 @@
  ;; If there is more than one, they won't work right.
  )
 
+;;
+(setq scroll-conservatively 1)
+(setq scroll-margin 10)
+(setq next-screen-context-lines 10)
+(setq scroll-preserve-screen-position t)
 (setq backup-directory-alist '((".*" . "~/.emacs_history")))
+(setq auto-save-file-name-transforms   '((".*" "~/.emacs_history/" t)))
+(global-hl-line-mode t)
+(show-paren-mode t)
+
+;; Keyboard
+(unless window-system
+  (keyboard-translate ?\C-h ?\C-?))
 
 ;; Server mode
 (defun my-server-detach-buffer ()
@@ -61,5 +73,6 @@
 ;; Go
 ;; go-mode: https://github.com/dominikh/go-mode.el
 (with-eval-after-load 'go-mode
+  (setq tab-width 4)
   (setq company-backends '(company-capf))
   (add-hook 'go-mode-hook 'lsp-deferred))
