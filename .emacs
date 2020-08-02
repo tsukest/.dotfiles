@@ -22,6 +22,9 @@
 ;; Auto complete
 ;; company-mode: http://company-mode.github.io/
 (add-hook 'after-init-hook 'global-company-mode)
+(with-eval-after-load 'company
+  (setq company-idle-delay 0)
+  (setq company-selection-wrap-around t))
 
 ;; Lisp
 ;; paredit: https://www.emacswiki.org/emacs/ParEdit
@@ -49,8 +52,6 @@
  ;; If there is more than one, they won't work right.
  '(auto-save-file-name-transforms (quote ((".*" "~/.emacs_history/" t))))
  '(backup-directory-alist (quote ((".*" . "~/.emacs_history"))))
- '(company-idle-delay 0)
- '(company-selection-wrap-around t)
  '(global-hl-line-mode t)
  '(ivy-count-format "(%d/%d) ")
  '(ivy-mode t)
