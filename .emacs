@@ -58,7 +58,7 @@
  '(next-screen-context-lines 10)
  '(package-selected-packages
    (quote
-    (lsp-ivy counsel go-mode yasnippet-snippets yasnippet company lsp-ui lsp-mode geiser paredit ##)))
+    (go-mode lsp-ivy lsp-ui lsp-mode geiser paredit yasnippet-snippets yasnippet company counsel ##)))
  '(scroll-conservatively 1)
  '(scroll-margin 10)
  '(scroll-preserve-screen-position t)
