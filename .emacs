@@ -8,8 +8,8 @@
 (package-initialize)
 
 ;; Keyboard
-(unless window-system
-  (keyboard-translate ?\C-h ?\C-?))
+(keyboard-translate ?\C-h ?\C-?)
+(keyboard-translate ?\C-? ?\C-h)
 
 ;; Server mode
 (defun my-server-detach-buffer ()
