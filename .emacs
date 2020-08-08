@@ -7,9 +7,13 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
+(load-theme 'dracula t)
+
 ;; Keyboard
-(keyboard-translate ?\C-h ?\C-?)
-(keyboard-translate ?\C-? ?\C-h)
+(define-key key-translation-map [?\C-h] [?\C-?])
+(define-key key-translation-map [?\C-?] [?\C-h])
+(global-set-key (kbd "C-?") 'help-command)
+(global-set-key (kbd "C-h") 'delete-backward-char)
 
 ;; Server mode
 (defun my-server-detach-buffer ()
@@ -59,7 +63,7 @@
  '(next-screen-context-lines 10)
  '(package-selected-packages
    (quote
-    (go-mode lsp-ivy lsp-ui lsp-mode geiser paredit yasnippet-snippets yasnippet company counsel ##)))
+    (dracula-theme go-mode lsp-ivy lsp-ui lsp-mode geiser paredit yasnippet-snippets yasnippet company counsel ##)))
  '(scroll-conservatively 1)
  '(scroll-margin 10)
  '(scroll-preserve-screen-position t)
