@@ -147,8 +147,10 @@
 ;; Other package settings
 
 (leaf which-key
-  :doc "Displays the key bindings following your currently entered incomplete command (a prefix) in a popup."
+  :doc "Display available keybindings in popup"
   :req "emacs-24.4"
+  :tag "emacs>=24.4"
+  :added "2020-08-28"
   :url "https://github.com/justbur/emacs-which-key"
   :emacs>= 24.4
   :ensure t
@@ -158,6 +160,8 @@
 (leaf ivy
   :doc "Incremental Vertical completYon"
   :req "emacs-24.5"
+  :tag "matching" "emacs>=24.5"
+  :added "2020-08-28"
   :url "https://github.com/abo-abo/swiper"
   :emacs>= 24.5
   :ensure t
@@ -178,6 +182,8 @@
   (leaf swiper
     :doc "Isearch with an overview. Oh, man!"
     :req "emacs-24.5" "ivy-0.13.0"
+    :tag "matching" "emacs>=24.5"
+    :added "2020-08-28"
     :url "https://github.com/abo-abo/swiper"
     :emacs>= 24.5
     :ensure t
@@ -185,6 +191,8 @@
   (leaf counsel
     :doc "Various completion functions using Ivy"
     :req "emacs-24.5" "swiper-0.13.0"
+    :tag "tools" "matching" "convenience" "emacs>=24.5"
+    :added "2020-08-28"
     :url "https://github.com/abo-abo/swiper"
     :emacs>= 24.5
     :ensure t
@@ -220,6 +228,8 @@
 (leaf ivy-rich
   :doc "More friendly display transformer for ivy."
   :req "emacs-24.5" "ivy-0.8.0"
+  :tag "ivy" "emacs>=24.5"
+  :added "2020-08-28"
   :url "https://github.com/Yevgnen/ivy-rich"
   :emacs>= 24.5
   :ensure t
@@ -229,6 +239,8 @@
 (leaf prescient
   :doc "Better sorting and filtering"
   :req "emacs-25.1"
+  :tag "matching" "convenience" "abbrev" "emacs>=24.3"
+  :added "2020-08-28"
   :url "https://github.com/raxod502/prescient.el"
   :emacs>= 25.1
   :ensure t
@@ -240,6 +252,8 @@
 (leaf ivy-prescient
   :doc "prescient.el + Ivy"
   :req "emacs-25.1" "prescient-4.0" "ivy-0.11.0"
+  :tag "matching" "convenience" "abbrev" "emacs>=24.3"
+  :added "2020-08-28"
   :url "https://github.com/raxod502/prescient.el"
   :emacs>= 25.1
   :ensure t
@@ -250,6 +264,8 @@
 (leaf flycheck
   :doc "On-the-fly syntax checking"
   :req "dash-2.12.1" "pkg-info-0.4" "let-alist-1.0.4" "seq-1.11" "emacs-24.3"
+  :tag "matching" "convenience" "abbrev" "emacs>=24.3"
+  :added "2020-08-28"
   :url "http://www.flycheck.org"
   :emacs>= 24.3
   :ensure t
@@ -260,6 +276,8 @@
 (leaf company
   :doc "Modular text completion framework"
   :req "emacs-24.3"
+  :tag "matching" "convenience" "abbrev" "emacs>=24.3"
+  :added "2020-08-28"
   :url "http://company-mode.github.io/"
   :emacs>= 24.3
   :ensure t
@@ -284,7 +302,8 @@
 (leaf company-c-headers
   :doc "Company mode backend for C/C++ header files"
   :req "emacs-24.1" "company-0.8"
-  :added "2020-03-25"
+  :tag "company" "development" "emacs>=24.1"
+  :added "2020-08-28"
   :emacs>= 24.1
   :ensure t
   :after company
@@ -293,33 +312,38 @@
   (add-to-list 'company-backends 'company-c-headers))
 
 (leaf yasnippet
-  :doc "Yet another snippet extension for Emacs."
+  :doc "Yet another snippet extension for Emacs"
   :req "cl-lib-0.5"
-  :tag "convenience" "emulation"
-  :url "https://github.com/joaotavora/yasnippet"
+  :tag "emulation" "convenience"
+  :added "2020-08-28"
+  :url "http://github.com/joaotavora/yasnippet"
   :ensure t
   :global-minor-mode yas-global-mode)
 
 (leaf yasnippet-snippets
-  :doc "Collection of yasnippet snippets."
+  :doc "Collection of yasnippet snippets"
   :req "yasnippet-0.8.0" "s-1.12.0"
-  :tag "convenience" "snippets"
-  :url "https://github.com/joaotavora/yasnippet"
-  :ensure t)
+  :tag "snippets"
+  :added "2020-08-28"
+  :ensure t
+  :after yasnippet)
 
 (leaf paredit
-  :doc "minor mode for editing parentheses."
-  :tag "list"
-  :url "https://mumble.net/~campbell/emacs/paredit.el"
+  :doc "minor mode for editing parentheses"
+  :tag "lisp"
+  :added "2020-08-28"
   :ensure t)
 
 (leaf geiser
-  :doc "GNU Emacs and Scheme talk to each other."
+  :doc "GNU Emacs and Scheme talk to each other"
+  :added "2020-08-28"
   :url "http://www.nongnu.org/geiser/"
   :ensure t)
 
 (leaf lisp-mode
-  :after t
+  :doc "Lisp mode, and its idiosyncratic commands"
+  :tag "builtin" "languages" "lisp"
+  :added "2020-08-28"
   :commands enable-paredit-mode
   :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
          (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
@@ -329,36 +353,41 @@
          (scheme-mode-hook . enable-paredit-mode)))
 
 (leaf lsp-mode
-  :doc "LSP mode."
-  :req "emacs-26.1 dash-2.14.1 dash-functional-2.14.1 f-0.20.0 ht-2.0 spinner-1.7.3 markdown-mode-2.3 lv-0"
-  :tag "languages"
+  :doc "LSP mode"
+  :req "emacs-26.1" "dash-2.14.1" "dash-functional-2.14.1" "f-0.20.0" "ht-2.0" "spinner-1.7.3" "markdown-mode-2.3" "lv-0"
+  :tag "languages" "emacs>=26.1"
+  :added "2020-08-28"
   :url "https://github.com/emacs-lsp/lsp-mode"
   :emacs>= 26.1
   :ensure t
-  :hook ((go-mode-hook . lsp-deferred))
-  :global-minor-mode t)
+  :hook ((lsp-mode-hook . lsp-enable-which-key-integration)
+         (go-mode-hook . lsp-deferred))
+  :custom (lsp-keymap-prefix . "C-c l"))
 
 (leaf lsp-ui
-  :doc "UI modules for lsp-mode."
-  :req "emacs-26.1 dash-2.14 dash-functional-1.2.0 lsp-mode-6.0 markdown-mode-2.3"
-  :tag "languages" "tools"
+  :doc "UI modules for lsp-mode"
+  :req "emacs-26.1" "dash-2.14" "dash-functional-1.2.0" "lsp-mode-6.0" "markdown-mode-2.3"
+  :tag "tools" "languages" "emacs>=26.1"
+  :added "2020-08-28"
   :url "https://github.com/emacs-lsp/lsp-ui"
   :emacs>= 26.1
   :ensure t
   :after lsp-mode)
 
 (leaf lsp-ivy
-  :doc "LSP ivy integration."
-  :req "emacs-25.1 dash-2.14.1 lsp-mode-6.2.1 ivy-0.13.0"
-  :tag "languages" "debug"
+  :doc "LSP ivy integration"
+  :req "emacs-25.1" "dash-2.14.1" "lsp-mode-6.2.1" "ivy-0.13.0"
+  :tag "debug" "languages" "emacs>=25.1"
+  :added "2020-08-28"
   :url "https://github.com/emacs-lsp/lsp-ivy"
   :emacs>= 25.1
   :ensure t
   :after lsp-mode)
 
 (leaf go-mode
-  :doc "Major mode for the Go programming language."
-  :tag "languages" "go"
+  :doc "Major mode for the Go programming language"
+  :tag "go" "languages"
+  :added "2020-08-28"
   :url "https://github.com/dominikh/go-mode.el"
   :ensure t
   :hook ((before-save-hook . gofmt-before-save))
