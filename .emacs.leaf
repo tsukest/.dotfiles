@@ -231,6 +231,7 @@
   :emacs>= 24.5
   :ensure t
   :after ivy
+  :custom ((ivy-rich-path-style . 'abbrev))
   :global-minor-mode t)
 
 (leaf prescient
@@ -324,6 +325,15 @@
   :added "2020-08-28"
   :ensure t
   :after yasnippet)
+
+(leaf magit
+  :doc "A Git porcelain inside Emacs."
+  :req "emacs-25.1" "async-20200113" "dash-20200524" "git-commit-20200516" "transient-20200601" "with-editor-20200522"
+  :tag "vc" "tools" "git" "emacs>=25.1"
+  :added "2020-09-02"
+  :emacs>= 25.1
+  :ensure t
+  :bind (("C-x g" . magit-status)))
 
 (leaf paredit
   :doc "minor mode for editing parentheses"
