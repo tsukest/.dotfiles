@@ -5,6 +5,8 @@
            (file-name-directory (or load-file-name byte-compile-current-file))))))
 
 (eval-and-compile
+  (custom-set-faces
+   '(default ((t (:family "Ricty" :foundry "PfEd" :slant normal :weight normal :height 110 :width normal)))))
   (customize-set-variable
    'package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
                        ("melpa" . "https://melpa.org/packages/")
@@ -53,7 +55,8 @@
 
   :bind (("M-ESC ESC" . c/redraw-frame)
          ("C-?" . help-command)
-         ("C-h" . delete-backward-char))
+         ("C-h" . delete-backward-char)
+         ("C-c c" . org-capture))
   :custom '((user-full-name . "satake")
             (user-mail-address . "satake.ts@gmail.com")
             (user-login-name . "satake")
@@ -73,15 +76,30 @@
             ;; (use-dialog-box . nil)
             ;; (use-file-dialog . nil)
             ;; (menu-bar-mode . t)
-            ;; (tool-bar-mode . nil)
+            (tool-bar-mode . nil)
             (scroll-bar-mode . nil)
             (indent-tabs-mode . nil)
             (global-hl-line-mode . t)
-            (next-screen-context-lines . 10))
+            (next-screen-context-lines . 10)
+            (org-agenda-files . '("~/work/gtd/inbox.org"
+                                  "~/work/gtd/project.org"
+                                  "~/work/gtd/someday.org"
+                                  "~/work/gtd/reference.org"
+                                  "~/work/gtd/trash.org"))
+            (org-capture-templates . '(("t" "Todo [inbox]" entry
+                                        (file+headline "~/Work/gtd/inbox.org" "INBOX")
+                                        "* TODO %i%?")
+                                       ("n" "Note" entry
+                                        (file+headline "~/Work/note/note.org" "Notes")
+                                        "* %i%?")))
+            (org-refile-targets . '(("~/work/gtd/project.org" :level . 1)
+                                    ("~/work/gtd/someday.org" :level . 1)
+                                    ("~/work/gtd/reference.org" :level . 1)
+                                    ("~/work/gtd/trash.org" :level . 1))))
   :config
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (define-key key-translation-map [?\C-h] [?\C-?])
-  (define-key key-translation-map [?\C-?] [?\C-h]))
+  ;;(define-key key-translation-map [?\C-h] [?\C-?])
+  ;;(define-key key-translation-map [?\C-?] [?\C-h])
+  (defalias 'yes-or-no-p 'y-or-n-p))
 
 (eval-and-compile
   (leaf bytecomp
@@ -146,6 +164,13 @@
 
 ;; Other package settings
 
+(leaf mozc
+  :doc "minor mode to input Japanese with Mozc"
+  :tag "input method" "multilingual" "mule"
+  :added "2020-09-30"
+  :ensure t
+  :custom ((default-input-method . "japanese-mozc")))
+
 (leaf which-key
   :doc "Display available keybindings in popup"
   :req "emacs-24.4"
@@ -156,6 +181,14 @@
   :ensure t
   :custom ((which-key-show-early-on-C-h . t))
   :global-minor-mode t)
+
+(leaf undo-tree
+  :doc "Treat undo history as a tree"
+  :tag "tree" "history" "redo" "undo" "files" "convenience"
+  :added "2020-09-29"
+  :url "http://www.dr-qubit.org/emacs.php"
+  :ensure t
+  :global-minor-mode global-undo-tree-mode)
 
 (leaf ivy
   :doc "Incremental Vertical completYon"
@@ -197,26 +230,15 @@
     :emacs>= 24.5
     :ensure t
     :blackout t
-    :bind (("C-c i" . counsel-imenu)
+    :bind (("M-y" . counsel-yank-pop)
+           ("C-c f" . counsel-git)
+           ("C-c g" . counsel-git-grep)
+           ("C-c F" . counsel-fzf)
+           ("C-c G" . counsel-rg)
+           ("C-c i" . counsel-imenu)
            ("C-c r" . counsel-recentf)
-           ("M-y" . counsel-yank-pop)
-           ("<f2> i" . counsel-info-lookup-symbol)
-           ("<f2> u" . counsel-unicode-char)
-           ("<f2> j" . counsel-set-variable)
-           ("C-c c" . counsel-compile)
-           ("C-c g" . counsel-git)
-           ("C-c j" . counsel-git-grep)
-           ("C-c L" . counsel-git-log)
-           ("C-c k" . counsel-rg)
-           ("C-c m" . counsel-linux-app)
-           ("C-c n" . counsel-fzf)
-           ("C-x l" . counsel-locate)
-           ("C-c J" . counsel-file-jump)
-           ("C-c w" . counsel-wmctrl)
            ("C-c b" . counsel-bookmark)
-           ("C-c d" . counsel-descbinds)
-           ("C-c o" . counsel-outline)
-           ("C-c F" . counsel-org-file))
+           ("C-c d" . counsel-descbinds))
     :custom `((ivy-count-format . "(%d/%d) ")
               (counsel-yank-pop-separator . "\n----------\n")
               (counsel-find-file-ignore-regexp . ,(rx-to-string '(or "./" "../") 'no-group)))
@@ -326,6 +348,20 @@
   :ensure t
   :after yasnippet)
 
+(leaf projectile
+  :doc "Manage and navigate projects in Emacs easily"
+  :req "emacs-25.1" "pkg-info-0.4"
+  :tag "convenience" "project" "emacs>=25.1"
+  :added "2020-09-30"
+  :url "https://github.com/bbatsov/projectile"
+  :emacs>= 25.1
+  :ensure t
+  :bind ((projectile-mode-map
+          ("s-p" . projectile-command-map)
+          ("C-c p" . projectile-command-map)))
+  :custom ((projectile-mode . +1)
+           (projectile-completion-system . 'ivy)))
+
 (leaf magit
   :doc "A Git porcelain inside Emacs."
   :req "emacs-25.1" "async-20200113" "dash-20200524" "git-commit-20200516" "transient-20200601" "with-editor-20200522"
@@ -400,6 +436,14 @@
   :hook ((before-save-hook . gofmt-before-save))
   :setq ((company-backends '(company-capf))
          (gofmt-command . "goimports")))
+
+(leaf yaml-mode
+  :doc "Major mode for editing YAML files"
+  :req "emacs-24.1"
+  :tag "yaml" "data" "emacs>=24.1"
+  :added "2020-09-10"
+  :emacs>= 24.1
+  :ensure t)
 
 (provide 'init)
 
