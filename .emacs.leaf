@@ -105,7 +105,8 @@
   :config
   ;;(define-key key-translation-map [?\C-h] [?\C-?])
   ;;(define-key key-translation-map [?\C-?] [?\C-h])
-  (defalias 'yes-or-no-p 'y-or-n-p))
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (load-theme 'dracula t))
 
 (eval-and-compile
   (leaf bytecomp
@@ -367,7 +368,8 @@
           ("s-p" . projectile-command-map)
           ("C-c p" . projectile-command-map)))
   :custom ((projectile-mode . +1)
-           (projectile-completion-system . 'ivy)))
+           (projectile-completion-system . 'ivy)
+           (projectile-switch-project-action . 'projectile-vc)))
 
 (leaf magit
   :doc "A Git porcelain inside Emacs."
@@ -500,7 +502,5 @@
   :ensure t)
 
 (provide 'init)
-
-(load-theme 'dracula t)
 
 ;;; init.el ends here
