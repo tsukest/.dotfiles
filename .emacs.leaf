@@ -1,4 +1,4 @@
-;;; init.el -- My init.el
+;;; init.el -- My init.el  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;; This is using leaf package.
 ;; Based on https://emacs-jp.github.io/tips/emacs-in-2020.
@@ -422,7 +422,8 @@
   :url "https://github.com/emacs-lsp/lsp-ui"
   :emacs>= 26.1
   :ensure t
-  :after lsp-mode)
+  :after lsp-mode
+  :custom ((lsp-ui-doc-position . 'at-point)))
 
 (leaf lsp-ivy
   :doc "LSP ivy integration"
@@ -464,6 +465,15 @@
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode)))
 
+(leaf js2-mode
+  :doc "Improved JavaScript editing mode"
+  :req "emacs-24.1" "cl-lib-0.5"
+  :tag "javascript" "languages" "emacs>=24.1"
+  :added "2020-10-06"
+  :url "https://github.com/mooz/js2-mode/"
+  :emacs>= 24.1
+  :ensure t)
+
 (leaf google-translate
   :doc "Emacs interface to Google Translate."
   :added "2020-10-04"
@@ -490,10 +500,6 @@
   :ensure t)
 
 (provide 'init)
-
-;; Local Variables:
-;; indent-tabs-mode: nil
-;; End:
 
 (load-theme 'dracula t)
 
