@@ -239,10 +239,10 @@
       :ensure t
       :blackout t
       :bind (("M-y" . counsel-yank-pop)
-             ("C-c f" . counsel-git)
-             ("C-c g" . counsel-git-grep)
-             ("C-c F" . counsel-fzf)
-             ("C-c G" . counsel-rg)
+             ("C-c f" . counsel-fzf)
+             ("C-c g" . counsel-rg)
+             ("C-c F" . counsel-git)
+             ("C-c G" . counsel-git-grep)
              ("C-c i" . counsel-imenu)
              ("C-c r" . counsel-recentf)
              ("C-c b" . counsel-bookmark)
