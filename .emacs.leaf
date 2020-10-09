@@ -11,8 +11,6 @@
            (file-name-directory (or load-file-name byte-compile-current-file))))))
 
 (eval-and-compile
-  (custom-set-faces
-   '(default ((t (:family "Ricty" :foundry "PfEd" :slant normal :weight normal :height 110 :width normal)))))
   (customize-set-variable
    'package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
                        ("melpa" . "https://melpa.org/packages/")
@@ -58,7 +56,6 @@
   (defun c/redraw-frame nil
     (interactive)
     (redraw-frame))
-
   :bind (("M-ESC ESC" . c/redraw-frame)
          ;;("C-?" . help-command)
          ;;("C-h" . delete-backward-char)
@@ -106,7 +103,19 @@
   ;;(define-key key-translation-map [?\C-h] [?\C-?])
   ;;(define-key key-translation-map [?\C-?] [?\C-h])
   (defalias 'yes-or-no-p 'y-or-n-p)
-  (load-theme 'dracula t))
+  (load-theme 'dracula t)
+  (set-face-attribute 'default nil
+                    :family "Ricty"
+                    :height 120)
+  (set-fontset-font (frame-parameter nil 'font)
+                    'japanese-jisx0208
+                    (cons "Ricty" "iso10646-1"))
+  (set-fontset-font (frame-parameter nil 'font)
+                    'japanese-jisx0212
+                    (cons "Ricty" "iso10646-1"))
+  (set-fontset-font (frame-parameter nil 'font)
+                    'katakana-jisx0201
+                    (cons "Ricty" "iso10646-1")))
 
 (eval-and-compile
   (leaf bytecomp
