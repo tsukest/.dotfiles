@@ -103,7 +103,7 @@
   ;;(define-key key-translation-map [?\C-h] [?\C-?])
   ;;(define-key key-translation-map [?\C-?] [?\C-h])
   (defalias 'yes-or-no-p 'y-or-n-p)
-  (load-theme 'dracula t)
+  (global-display-line-numbers-mode)
   (set-face-attribute 'default nil
                     :family "Ricty"
                     :height 120)
@@ -115,7 +115,8 @@
                     (cons "Ricty" "iso10646-1"))
   (set-fontset-font (frame-parameter nil 'font)
                     'katakana-jisx0201
-                    (cons "Ricty" "iso10646-1")))
+                    (cons "Ricty" "iso10646-1"))
+  (load-theme 'dracula t))
 
 (eval-and-compile
   (leaf bytecomp
@@ -377,8 +378,7 @@
           ("s-p" . projectile-command-map)
           ("C-c p" . projectile-command-map)))
   :custom ((projectile-mode . +1)
-           (projectile-completion-system . 'ivy)
-           (projectile-switch-project-action . 'projectile-vc)))
+           (projectile-completion-system . 'ivy)))
 
 (leaf magit
   :doc "A Git porcelain inside Emacs."
@@ -483,6 +483,21 @@
   :added "2020-10-06"
   :url "https://github.com/mooz/js2-mode/"
   :emacs>= 24.1
+  :ensure t)
+
+(leaf docker
+  :doc "Emacs interface to Docker"
+  :req "dash-2.14.1" "docker-tramp-0.1" "emacs-24.5" "json-mode-1.7.0" "s-1.12.0" "tablist-0.70" "transient-0.2.0"
+  :tag "convenience" "filename" "emacs>=24.5"
+  :added "2020-10-09"
+  :url "https://github.com/Silex/docker.el"
+  :emacs>= 24.5
+  :ensure t)
+
+(leaf protobuf-mode
+  :doc "major mode for editing protocol buffers."
+  :tag "languages" "protobuf" "google"
+  :added "2020-10-13"
   :ensure t)
 
 (leaf google-translate
