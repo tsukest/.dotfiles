@@ -57,8 +57,6 @@
     (interactive)
     (redraw-frame))
   :bind (("M-ESC ESC" . c/redraw-frame)
-         ;;("C-?" . help-command)
-         ;;("C-h" . delete-backward-char)
          ("C-c c" . org-capture))
   :custom '((user-full-name . "satake")
             (user-mail-address . "satake.ts@gmail.com")
@@ -83,27 +81,9 @@
             (scroll-bar-mode . nil)
             (indent-tabs-mode . nil)
             (global-hl-line-mode . t)
-            (next-screen-context-lines . 10)
-            (org-agenda-files . '("~/work/gtd/inbox.org"
-                                  "~/work/gtd/project.org"
-                                  "~/work/gtd/someday.org"
-                                  "~/work/gtd/reference.org"
-                                  "~/work/gtd/trash.org"))
-            (org-capture-templates . '(("t" "Todo [inbox]" entry
-                                        (file+headline "~/Work/gtd/inbox.org" "INBOX")
-                                        "* TODO %i%?")
-                                       ("n" "Note" entry
-                                        (file+headline "~/Work/note/note.org" "Notes")
-                                        "* %i%?")))
-            (org-refile-targets . '(("~/work/gtd/project.org" :level . 1)
-                                    ("~/work/gtd/someday.org" :level . 1)
-                                    ("~/work/gtd/reference.org" :level . 1)
-                                    ("~/work/gtd/trash.org" :level . 1))))
+            (next-screen-context-lines . 10))
   :config
-  ;;(define-key key-translation-map [?\C-h] [?\C-?])
-  ;;(define-key key-translation-map [?\C-?] [?\C-h])
   (defalias 'yes-or-no-p 'y-or-n-p)
-  (global-display-line-numbers-mode)
   (set-face-attribute 'default nil
                     :family "Ricty"
                     :height 120)
@@ -115,8 +95,7 @@
                     (cons "Ricty" "iso10646-1"))
   (set-fontset-font (frame-parameter nil 'font)
                     'katakana-jisx0201
-                    (cons "Ricty" "iso10646-1"))
-  (load-theme 'dracula t))
+                    (cons "Ricty" "iso10646-1")))
 
 (eval-and-compile
   (leaf bytecomp
@@ -179,7 +158,44 @@
   :tag "builtin" "internal"
   :custom `((auto-save-list-file-prefix . ,(locate-user-emacs-file "backup/.saves-"))))
 
+(leaf display-line-numbers
+  :doc "interface for display-line-numbers"
+  :tag "builtin"
+  :added "2020-10-17"
+  :global-minor-mode global-display-line-numbers-mode)
+
+(leaf org
+  :doc "Export Framework for Org Mode"
+  :tag "builtin"
+  :added "2020-10-17"
+  :custom ((org-agenda-files . '("~/Documents/GTD/inbox.org"
+                                 "~/Documents/GTD/project.org"
+                                 "~/Documents/GTD/someday.org"
+                                 "~/Documents/GTD/reference.org"
+                                 "~/Documents/GTD/trash.org"))
+           (org-capture-templates . '(("t" "Todo [inbox]" entry
+                                       (file+headline "~/Documents/GTD/inbox.org" "INBOX")
+                                       "* TODO %i%?")
+                                      ("n" "Note" entry
+                                       (file+headline "~/Documents/GTD/note.org" "Notes")
+                                       "* %i%?")))
+           (org-refile-targets . '(("~/Documents/GTD/project.org" :level . 1)
+                                   ("~/Documents/GTD/someday.org" :level . 1)
+                                   ("~/Documents/GTD/reference.org" :level . 1)
+                                   ("~/Documents/GTD/trash.org" :level . 1)))))
+
 ;; Other package settings
+
+(leaf dracula-theme
+  :doc "Dracula Theme"
+  :req "emacs-24.3"
+  :tag "emacs>=24.3"
+  :added "2020-10-17"
+  :url "https://github.com/dracula/emacs"
+  :emacs>= 24.3
+  :ensure t
+  :config
+  (load-theme 'dracula t))
 
 (leaf mozc
   :doc "minor mode to input Japanese with Mozc"
@@ -376,7 +392,8 @@
   :ensure t
   :bind ((projectile-mode-map
           ("s-p" . projectile-command-map)
-          ("C-c p" . projectile-command-map)))
+          ("C-c p" . projectile-command-map)
+          ("C-c p g" . my-customize-projectile-counsel-git-grep)))
   :custom ((projectile-mode . +1)
            (projectile-completion-system . 'ivy)))
 
@@ -524,6 +541,13 @@
   :tag "lisp"
   :added "2020-10-04"
   :ensure t)
+
+(leaf my-customize
+  :tag "out-of-MELPA"
+  :added "2020-10-17"
+  :el-get tsukest/my-customize.el
+  :require t
+  :bind (("M-!" . my-customize-select-shell)))
 
 (provide 'init)
 
