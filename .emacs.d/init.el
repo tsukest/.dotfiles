@@ -204,7 +204,7 @@
   :url "https://github.com/domtronn/all-the-icons.el"
   :emacs>= 24.3
   :ensure t
-  :custom ((all-the-icons-scale-factor . 1.0)))
+  :custom ((all-the-icons-scale-factor . 0.8)))
 
 ;;(leaf dracula-theme
 ;;  :doc "Dracula Theme"
@@ -226,8 +226,9 @@
   :emacs>= 25.1
   :ensure t
   :config
-  (load-theme 'doom-one t)
-  (doom-themes-neotree-config))
+  (load-theme 'doom-dracula t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config))
 
 (leaf doom-modeline
   :doc "A minimal and modern mode-line"
@@ -237,6 +238,8 @@
   :url "https://github.com/seagle0128/doom-modeline"
   :emacs>= 25.1
   :ensure t
+  :custom ((doom-modeline-project-detection . 'projectile)
+           (doom-modeline-indent-info . t))
   :config
   (doom-modeline-mode t))
 
