@@ -196,16 +196,49 @@
 
 ;; Other package settings
 
-(leaf dracula-theme
-  :doc "Dracula Theme"
-  :req "emacs-24.3"
-  :tag "emacs>=24.3"
-  :added "2020-10-17"
-  :url "https://github.com/dracula/emacs"
+(leaf all-the-icons
+  :doc "A library for inserting Developer icons"
+  :req "emacs-24.3" "memoize-1.0.1"
+  :tag "lisp" "convenient" "emacs>=24.3"
+  :added "2020-10-28"
+  :url "https://github.com/domtronn/all-the-icons.el"
   :emacs>= 24.3
   :ensure t
+  :custom ((all-the-icons-scale-factor . 1.0)))
+
+;;(leaf dracula-theme
+;;  :doc "Dracula Theme"
+;;  :req "emacs-24.3"
+;;  :tag "emacs>=24.3"
+;;  :added "2020-10-17"
+;;  :url "https://github.com/dracula/emacs"
+;;  :emacs>= 24.3
+;;  :ensure t
+;;  :config
+;;  (load-theme 'dracula t))
+
+(leaf doom-themes
+  :doc "an opinionated pack of modern color-themes"
+  :req "emacs-25.1" "cl-lib-0.5"
+  :tag "nova" "faces" "icons" "neotree" "theme" "one" "atom" "blue" "light" "dark" "emacs>=25.1"
+  :added "2020-10-28"
+  :url "https://github.com/hlissner/emacs-doom-theme"
+  :emacs>= 25.1
+  :ensure t
   :config
-  (load-theme 'dracula t))
+  (load-theme 'doom-one t)
+  (doom-themes-neotree-config))
+
+(leaf doom-modeline
+  :doc "A minimal and modern mode-line"
+  :req "emacs-25.1" "all-the-icons-2.2.0" "shrink-path-0.2.0" "dash-2.11.0"
+  :tag "mode-line" "faces" "emacs>=25.1"
+  :added "2020-10-28"
+  :url "https://github.com/seagle0128/doom-modeline"
+  :emacs>= 25.1
+  :ensure t
+  :config
+  (doom-modeline-mode 1))
 
 (leaf mozc
   :doc "minor mode to input Japanese with Mozc"
