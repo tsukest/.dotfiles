@@ -238,7 +238,7 @@
   :emacs>= 25.1
   :ensure t
   :config
-  (doom-modeline-mode 1))
+  (doom-modeline-mode t))
 
 (leaf mozc
   :doc "minor mode to input Japanese with Mozc"
