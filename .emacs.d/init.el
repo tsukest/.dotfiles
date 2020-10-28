@@ -164,6 +164,16 @@
   :added "2020-10-17"
   :global-minor-mode global-display-line-numbers-mode)
 
+(leaf time
+  :doc "display time, load and mail indicator in mode line of Emacs"
+  :tag "builtin"
+  :added "2020-10-23"
+  :global-minor-mode display-time-mode
+  :custom ((display-time-day-and-date . t)
+           (display-time-24hr-format . t)
+           (display-time-mail-file . 'none)
+           (display-time-load-average-threshold . 0.3)))
+
 (leaf org
   :doc "Export Framework for Org Mode"
   :tag "builtin"
