@@ -449,8 +449,8 @@
   :bind ((projectile-mode-map
           ("s-p" . projectile-command-map)
           ("C-c p" . projectile-command-map)
-          ("C-c p g" . my-customize-projectile-counsel-git-grep)
-          ("C-c p G" . my-customize-projectile-vc)))
+          ("C-c p g" . my-projectile-counsel-git-grep)
+          ("C-c p G" . my-projectile-vc)))
   :custom ((projectile-mode . +1)
            (projectile-completion-system . 'ivy)
            (projectile-switch-project-action . 'projectile-dired)))
@@ -604,7 +604,8 @@
   :added "2020-10-17"
   :el-get tsukest/my-customize.el
   :require t
-  :bind (("M-!" . my-customize-select-shell)))
+  :bind (("M-!" . my-select-shell)
+         ("C-x M-o" . my-other-window-1)))
 
 (provide 'init)
 
