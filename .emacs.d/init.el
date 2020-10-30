@@ -579,7 +579,7 @@
   :doc "Emacs interface to Google Translate."
   :added "2020-10-04"
   :ensure t
-  :bind (("C-c t" . google-translate-at-point))
+  :bind (("C-c C-t" . google-translate-at-point))
   :custom ((google-translate-default-source-language . "auto")
            (google-translate-default-target-language . "ja")
            (google-translate-output-destination . 'echo-area)
