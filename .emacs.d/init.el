@@ -174,6 +174,27 @@
            (display-time-mail-file . 'none)
            (display-time-load-average-threshold . 0.3)))
 
+(leaf dired
+  :doc "directory-browsing commands"
+  :tag "builtin" "files"
+  :added "2020-10-30"
+  :url "https://github.com/Fuco1/dired-hacks/"
+  :bind (dired-mode-map
+         ("i" . dired-subtree-insert)
+         ("r" . dired-subtree-remove)
+         ("TAB" . dired-subtree-toggle)
+         ("C-M-u" . dired-subtree-up)
+         ("C-M-d" . dired-subtree-down)
+         ("C-M-n" . dired-subtree-next-sibling)
+         ("C-M-p" . dired-subtree-previous-sibling)))
+
+(leaf dired-subtree
+  :doc "Insert subdirectories in a tree-like fashion"
+  :req "dash-2.5.0" "dired-hacks-utils-0.0.1"
+  :tag "files"
+  :added "2020-10-30"
+  :ensure t)
+
 (leaf org
   :doc "Export Framework for Org Mode"
   :tag "builtin"
@@ -206,17 +227,6 @@
   :ensure t
   :custom ((all-the-icons-scale-factor . 0.8)))
 
-;;(leaf dracula-theme
-;;  :doc "Dracula Theme"
-;;  :req "emacs-24.3"
-;;  :tag "emacs>=24.3"
-;;  :added "2020-10-17"
-;;  :url "https://github.com/dracula/emacs"
-;;  :emacs>= 24.3
-;;  :ensure t
-;;  :config
-;;  (load-theme 'dracula t))
-
 (leaf doom-themes
   :doc "an opinionated pack of modern color-themes"
   :req "emacs-25.1" "cl-lib-0.5"
@@ -227,7 +237,6 @@
   :ensure t
   :config
   (load-theme 'doom-dracula t)
-  (doom-themes-neotree-config)
   (doom-themes-org-config))
 
 (leaf doom-modeline
@@ -239,7 +248,9 @@
   :emacs>= 25.1
   :ensure t
   :custom ((doom-modeline-project-detection . 'projectile)
-           (doom-modeline-indent-info . t))
+           (doom-modeline-buffer-file-name-style . 'truncate-with-project)
+           (doom-modeline-indent-info . t)
+           (doom-modeline-vcs-max-length . 18))
   :config
   (doom-modeline-mode t))
 
