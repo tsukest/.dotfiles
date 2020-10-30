@@ -1,7 +1,9 @@
 ;;; init.el -- My init.el  -*- lexical-binding: t; -*-
+
 ;;; Commentary:
 ;; This is using leaf package.
 ;; Based on https://emacs-jp.github.io/tips/emacs-in-2020.
+
 ;;; Code:
 
 (eval-and-compile
