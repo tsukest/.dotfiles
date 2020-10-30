@@ -169,8 +169,7 @@
   :tag "builtin"
   :added "2020-10-23"
   :global-minor-mode display-time-mode
-  :custom ((display-time-day-and-date . t)
-           (display-time-24hr-format . t)
+  :custom ((display-time-24hr-format . t)
            (display-time-mail-file . 'none)
            (display-time-load-average-threshold . 0.3)))
 
@@ -450,9 +449,11 @@
   :bind ((projectile-mode-map
           ("s-p" . projectile-command-map)
           ("C-c p" . projectile-command-map)
-          ("C-c p g" . my-customize-projectile-counsel-git-grep)))
+          ("C-c p g" . my-customize-projectile-counsel-git-grep)
+          ("C-c p G" . my-customize-projectile-vc)))
   :custom ((projectile-mode . +1)
-           (projectile-completion-system . 'ivy)))
+           (projectile-completion-system . 'ivy)
+           (projectile-switch-project-action . 'projectile-dired)))
 
 (leaf magit
   :doc "A Git porcelain inside Emacs."
@@ -578,8 +579,7 @@
   :doc "Emacs interface to Google Translate."
   :added "2020-10-04"
   :ensure t
-  :bind (("C-c t" . google-translate-at-point)
-         ("C-c T" . google-translate-query-translate))
+  :bind (("C-c t" . google-translate-at-point))
   :custom ((google-translate-default-source-language . "auto")
            (google-translate-default-target-language . "ja")
            (google-translate-output-destination . 'nil)
