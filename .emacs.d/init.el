@@ -56,8 +56,7 @@
   (defun c/redraw-frame nil
     (interactive)
     (redraw-frame))
-  :bind (("M-ESC ESC" . c/redraw-frame)
-         ("C-c c" . org-capture))
+  :bind (("M-ESC ESC" . c/redraw-frame))
   :custom '((user-full-name . "satake")
             (user-mail-address . "satake.ts@gmail.com")
             (user-login-name . "satake")
@@ -198,6 +197,7 @@
   :doc "Export Framework for Org Mode"
   :tag "builtin"
   :added "2020-10-17"
+  :bind (("C-c c" . org-capture))
   :custom ((org-agenda-files . '("~/Documents/GTD/inbox.org"
                                  "~/Documents/GTD/project.org"
                                  "~/Documents/GTD/someday.org"
@@ -582,8 +582,8 @@
   :bind (("C-c t" . google-translate-at-point))
   :custom ((google-translate-default-source-language . "auto")
            (google-translate-default-target-language . "ja")
-           (google-translate-output-destination . 'nil)
-           (google-translate-show-phonetic . t))
+           (google-translate-output-destination . 'echo-area)
+           (google-translate-show-phonetic . nil))
   :config
   (leaf google-translate-default-ui
     :doc "default UI for Google Translate"
