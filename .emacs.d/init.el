@@ -195,6 +195,12 @@
   :added "2020-10-30"
   :ensure t)
 
+(leaf ediff
+  :doc "a comprehensive visual interface to diff & patch"
+  :tag "builtin"
+  :added "2020-10-31"
+  :custom ((ediff-window-setup-function . 'ediff-setup-windows-plain)))
+
 (leaf browse-url
   :doc "pass a URL to a WWW browser"
   :tag "builtin"
