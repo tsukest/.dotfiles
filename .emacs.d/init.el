@@ -195,6 +195,12 @@
   :added "2020-10-30"
   :ensure t)
 
+(leaf browse-url
+  :doc "pass a URL to a WWW browser"
+  :tag "builtin"
+  :added "2020-10-24"
+  :custom ((browse-url-browser-function . eww-browse-url)))
+
 (leaf org
   :doc "Export Framework for Org Mode"
   :tag "builtin"
@@ -600,6 +606,14 @@
   :tag "lisp"
   :added "2020-10-04"
   :ensure t)
+
+(leaf twittering-mode
+  :doc "Major mode for Twitter"
+  :tag "web" "twitter"
+  :added "2020-10-24"
+  :url "http://twmode.sf.net/"
+  :ensure t
+  :custom ((twittering-icon-mode . t)))
 
 (leaf my-customize
   :tag "out-of-MELPA"
