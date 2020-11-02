@@ -512,7 +512,8 @@
   :ensure t
   :hook ((lsp-mode-hook . lsp-enable-which-key-integration)
          (go-mode-hook . lsp-deferred))
-  :custom (lsp-keymap-prefix . "C-c l"))
+  :custom ((lsp-keymap-prefix . "C-c l")
+           (lsp-file-watch-threshold . 10000)))
 
 (leaf lsp-ui
   :doc "UI modules for lsp-mode"
