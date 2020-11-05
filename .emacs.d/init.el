@@ -82,7 +82,10 @@
             (scroll-bar-mode . nil)
             (indent-tabs-mode . nil)
             (global-hl-line-mode . t)
-            (next-screen-context-lines . 10))
+            (next-screen-context-lines . 10)
+            (tab-width . 4)
+            (gc-cons-threshold . 102400000)
+            (read-process-output-max . 3145728))
   :config
   (defalias 'yes-or-no-p 'y-or-n-p)
   (set-face-attribute 'default nil
@@ -524,7 +527,8 @@
   :emacs>= 26.1
   :ensure t
   :after lsp-mode
-  :custom ((lsp-ui-doc-position . 'at-point)))
+  :custom ((lsp-ui-doc-position . 'top)
+           (lsp-ui-doc-delay . 0.5)))
 
 (leaf lsp-ivy
   :doc "LSP ivy integration"
@@ -594,7 +598,7 @@
   :doc "Emacs interface to Google Translate."
   :added "2020-10-04"
   :ensure t
-  :bind (("C-c C-t" . google-translate-at-point))
+  :bind (("C-c t" . google-translate-at-point))
   :custom ((google-translate-default-source-language . "auto")
            (google-translate-default-target-language . "ja")
            (google-translate-output-destination . 'echo-area)
