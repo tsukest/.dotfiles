@@ -84,8 +84,9 @@
             (global-hl-line-mode . t)
             (next-screen-context-lines . 10)
             (tab-width . 4)
-            (gc-cons-threshold . 102400000)
-            (read-process-output-max . 3145728))
+            (gc-cons-threshold . 134217728) ;;(* 128 1024 1024)
+            (read-process-output-max . 3145728) ;;(* 3 1024 1024)
+            )
   :config
   (defalias 'yes-or-no-p 'y-or-n-p)
   (set-face-attribute 'default nil
@@ -175,7 +176,7 @@
   :global-minor-mode display-time-mode
   :custom ((display-time-24hr-format . t)
            (display-time-mail-file . 'none)
-           (display-time-load-average-threshold . 0.3)))
+           (display-time-load-average-threshold . 1.0)))
 
 (leaf dired
   :doc "directory-browsing commands"
@@ -203,6 +204,20 @@
   :tag "builtin"
   :added "2020-10-31"
   :custom ((ediff-window-setup-function . 'ediff-setup-windows-plain)))
+
+(leaf shell
+  :doc "specialized comint.el for running the shell"
+  :tag "builtin"
+  :added "2020-11-09"
+  :bind (shell-mode-map
+         ("C-c C-l" . counsel-shell-history)))
+
+(leaf eshell
+  :doc "the Emacs command shell"
+  :tag "builtin"
+  :added "2020-11-09"
+  :hook ((eshell-mode-hook . (lambda ()
+                               (define-key eshell-mode-map (kbd "C-c C-l") #'counsel-esh-history)))))
 
 (leaf browse-url
   :doc "pass a URL to a WWW browser"
