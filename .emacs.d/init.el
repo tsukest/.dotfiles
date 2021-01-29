@@ -75,13 +75,10 @@
             (ring-bell-function . 'ignore)
             (text-quoting-style . 'straight)
             (truncate-lines . t)
-            ;; (use-dialog-box . nil)
-            ;; (use-file-dialog . nil)
-            ;; (menu-bar-mode . t)
+            (menu-bar-mode . nil)
             (tool-bar-mode . nil)
             (scroll-bar-mode . nil)
             (indent-tabs-mode . nil)
-            (global-hl-line-mode . t)
             (next-screen-context-lines . 10)
             (tab-width . 4)
             (gc-cons-threshold . 134217728) ;;(* 128 1024 1024)
@@ -100,13 +97,51 @@
                     (cons "Ricty" "iso10646-1"))
   (set-fontset-font (frame-parameter nil 'font)
                     'katakana-jisx0201
-                    (cons "Ricty" "iso10646-1")))
+                    (cons "Ricty" "iso10646-1"))
+  (setenv "GIT_PAGER" ""))
 
 (eval-and-compile
   (leaf bytecomp
     :doc "compilation of Lisp code into byte code"
     :tag "builtin" "lisp"
     :custom (byte-compile-warnings . '(cl-functions))))
+
+(leaf face-remap
+  :doc "Functions for managing `face-remapping-alist'"
+  :tag "builtin"
+  :added "2020-11-13"
+  :bind ("<f5>" . hydra-zoom/body)
+  :hydra (hydra-zoom ()
+                     "zoom"
+                     ("i" text-scale-increase "in")
+                     ("o" text-scale-decrease "out")))
+
+(leaf window
+  :doc "GNU Emacs window commands aside from those written in C"
+  :tag "builtin" "internal"
+  :added "2020-11-13"
+  :bind ("<f6>" . hydra-window-size/body)
+  :hydra (hydra-window-size ()
+                            "window"
+                            ("f" enlarge-window-horizontally "enlarge horizontally")
+                            ("b" shrink-window-horizontally "shrink horizontally")
+                            ("p" shrink-window "shrink vertically")
+                            ("n" enlarge-window "enlarge vertically")))
+
+(leaf tab-bar
+  :doc "frame-local tabs with named persistent window configurations"
+  :tag "builtin"
+  :added "2020-12-02"
+  :global-minor-mode t
+  :custom ((tab-bar-new-button-show . nil)
+           (tab-bar-close-button-show . nil)
+           (tab-bar-tab-name-function . #'tab-bar-tab-name-current-with-count)))
+
+(leaf hl-line
+  :doc "highlight the current line"
+  :tag "builtin"
+  :added "2020-11-24"
+  :global-minor-mode global-hl-line-mode)
 
 (leaf autorevert
   :doc "revert buffers when files on disk change"
@@ -174,9 +209,13 @@
   :tag "builtin"
   :added "2020-10-23"
   :global-minor-mode display-time-mode
-  :custom ((display-time-24hr-format . t)
+  :custom ((display-time-day-and-date . t)
+           (display-time-24hr-format . t)
            (display-time-mail-file . 'none)
-           (display-time-load-average-threshold . 1.0)))
+           (display-time-load-average-threshold . 1.0)
+           (frame-title-format . '("" display-time-string " ")))
+  :config
+  (delq 'display-time-string global-mode-string))
 
 (leaf dired
   :doc "directory-browsing commands"
@@ -210,14 +249,21 @@
   :tag "builtin"
   :added "2020-11-09"
   :bind (shell-mode-map
-         ("C-c C-l" . counsel-shell-history)))
+         ("C-c C-l" . counsel-shell-history))
+  :hook ((shell-mode-hook . (lambda () (company-mode -1))))
+  :config
+  (add-to-list 'display-buffer-alist '("^\\*shell\\*$" . (display-buffer-same-window))))
 
 (leaf eshell
   :doc "the Emacs command shell"
   :tag "builtin"
   :added "2020-11-09"
   :hook ((eshell-mode-hook . (lambda ()
-                               (define-key eshell-mode-map (kbd "C-c C-l") #'counsel-esh-history)))))
+                               (define-key eshell-mode-map (kbd "C-c C-l") #'counsel-esh-history))))
+  :custom ((eshell-history-size . 10000)
+           (eshell-hist-ignoredups . t))
+  :config
+  (setq eshell-modules-list (delq 'eshell-ls (delq 'eshell-unix eshell-modules-list))))
 
 (leaf browse-url
   :doc "pass a URL to a WWW browser"
@@ -246,6 +292,26 @@
                                    ("~/Documents/GTD/reference.org" :level . 1)
                                    ("~/Documents/GTD/trash.org" :level . 1)))))
 
+(leaf vc
+  :doc "drive a version-control system from within Emacs"
+  :tag "builtin"
+  :added "2021-01-27"
+  :custom ((vc-handled-backends . '(Git))))
+
+(leaf gnus
+  :doc "Identifying spam"
+  :tag "builtin"
+  :added "2020-12-01"
+  :custom ((gnus-home-directory . "~/gnus")))
+
+(leaf misc
+  :doc "some nonstandard editing and utility commands for Emacs"
+  :tag "builtin" "convenience"
+  :added "2020-11-20"
+  :bind (;("M-f" . forward-to-word)
+         ;("M-b" . backward-to-word)
+         ))
+
 ;; Other package settings
 
 (leaf all-the-icons
@@ -256,7 +322,7 @@
   :url "https://github.com/domtronn/all-the-icons.el"
   :emacs>= 24.3
   :ensure t
-  :custom ((all-the-icons-scale-factor . 0.8)))
+  :custom ((all-the-icons-scale-factor . 0.9)))
 
 (leaf doom-themes
   :doc "an opinionated pack of modern color-themes"
@@ -266,6 +332,10 @@
   :url "https://github.com/hlissner/emacs-doom-theme"
   :emacs>= 25.1
   :ensure t
+  :custom-face
+  (tab-bar . '((t (:background "#282a36"))))
+  (tab-bar-tab . '((t (:background "#1E2029"))))
+  (tab-bar-tab-inactive . '((t (:foreground "#6272a4" :background "#282a36"))))
   :config
   (load-theme 'doom-dracula t)
   (doom-themes-org-config))
@@ -282,8 +352,7 @@
            (doom-modeline-buffer-file-name-style . 'truncate-with-project)
            (doom-modeline-indent-info . t)
            (doom-modeline-vcs-max-length . 18))
-  :config
-  (doom-modeline-mode t))
+  :global-minor-mode t)
 
 (leaf mozc
   :doc "minor mode to input Japanese with Mozc"
@@ -341,7 +410,7 @@
     :url "https://github.com/abo-abo/swiper"
     :emacs>= 24.5
     :ensure t
-    :bind (("C-s" . swiper-isearch))
+    :bind (("C-S-s" . swiper-isearch))
     :config
     (leaf counsel
       :doc "Various completion functions using Ivy"
@@ -353,10 +422,10 @@
       :ensure t
       :blackout t
       :bind (("M-y" . counsel-yank-pop)
-             ("C-c f" . counsel-fzf)
-             ("C-c g" . counsel-rg)
-             ("C-c F" . counsel-git)
-             ("C-c G" . counsel-git-grep)
+             ("C-c f" . my-find-interactive)
+             ("C-c g" . my-grep-interactive)
+             ("C-c F" . counsel-fzf)
+             ("C-c G" . counsel-rg)
              ("C-c i" . counsel-imenu)
              ("C-c r" . counsel-recentf)
              ("C-c b" . counsel-bookmark)
@@ -375,7 +444,8 @@
   :emacs>= 24.5
   :ensure t
   :after ivy
-  :custom ((ivy-rich-path-style . 'abbrev))
+  :custom ((ivy-rich-path-style . 'abbrev)
+           (ivy-rich-project-root-cache-mode . t))
   :global-minor-mode t)
 
 (leaf prescient
@@ -520,6 +590,19 @@
          (lisp-interaction-mode-hook . enable-paredit-mode)
          (scheme-mode-hook . enable-paredit-mode)))
 
+(leaf lsp-python-ms
+  :doc "The lsp-mode client for Microsoft python-language-server"
+  :req "emacs-25.1" "lsp-mode-6.1"
+  :tag "tools" "languages" "emacs>=25.1"
+  :added "2020-12-22"
+  :url "https://github.com/emacs-lsp/lsp-python-ms"
+  :emacs>= 25.1
+  :ensure t
+  :init (setq lsp-python-ms-auto-install-server t)
+  :hook ((python-mode . (lambda ()
+                          (require 'lsp-python-ms)
+                          (lsp)))))
+
 (leaf lsp-mode
   :doc "LSP mode"
   :req "emacs-26.1" "dash-2.14.1" "dash-functional-2.14.1" "f-0.20.0" "ht-2.0" "spinner-1.7.3" "markdown-mode-2.3" "lv-0"
@@ -528,10 +611,34 @@
   :url "https://github.com/emacs-lsp/lsp-mode"
   :emacs>= 26.1
   :ensure t
+  :bind (lsp-mode-map
+         ("C-c l" . hydra-lsp/body))
+  :hydra (hydra-lsp (:exit t :hint nil)
+                    "
+ Buffer^^               Server^^                   Symbol
+-------------------------------------------------------------------------------------
+ [_f_] format           [_M-r_] restart            [_d_] declaration  [_i_] implementation  [_o_] documentation
+ [_m_] imenu            [_S_]   shutdown           [_D_] definition   [_t_] type            [_r_] rename
+ [_x_] execute action   [_M-s_] describe session   [_R_] references   [_s_] signature"
+                    ("d" lsp-find-declaration)
+                    ("D" lsp-ui-peek-find-definitions)
+                    ("R" lsp-ui-peek-find-references)
+                    ("i" lsp-ui-peek-find-implementation)
+                    ("t" lsp-find-type-definition)
+                    ("s" lsp-signature-help)
+                    ("o" lsp-describe-thing-at-point)
+                    ("r" lsp-rename)
+
+                    ("f" lsp-format-buffer)
+                    ("m" lsp-ui-imenu)
+                    ("x" lsp-execute-code-action)
+
+                    ("M-s" lsp-describe-session)
+                    ("M-r" lsp-restart-workspace)
+                    ("S" lsp-shutdown-workspace))
   :hook ((lsp-mode-hook . lsp-enable-which-key-integration)
          (go-mode-hook . lsp-deferred))
-  :custom ((lsp-keymap-prefix . "C-c l")
-           (lsp-file-watch-threshold . 10000)))
+  :custom ((lsp-file-watch-threshold . 10000)))
 
 (leaf lsp-ui
   :doc "UI modules for lsp-mode"
@@ -554,6 +661,43 @@
   :emacs>= 25.1
   :ensure t
   :after lsp-mode)
+
+(leaf markdown-mode
+  :doc "Major mode for Markdown-formatted text"
+  :req "emacs-25.1"
+  :tag "itex" "github flavored markdown" "markdown" "emacs>=25.1"
+  :added "2020-11-17"
+  :url "https://jblevins.org/projects/markdown-mode/"
+  :emacs>= 25.1
+  :ensure t
+  :bind (markdown-mode-map
+         ("C-c m" . hydra-markdown-mode/body))
+  :hydra (hydra-markdown-mode (:exit t :hint nil) "
+Formatting        C-c C-s    _s_: bold          _e_: italic     _b_: blockquote   _p_: pre-formatted    _c_: code
+Headings          C-c C-t    _h_: automatic     _1_: h1         _2_: h2           _3_: h3               _4_: h4
+Lists             C-c C-x    _m_: insert item   
+Demote/Promote    C-c C-x    _l_: promote       _r_: demote     _u_: move up      _d_: move down
+Links, footnotes  C-c C-a    _L_: link          _U_: uri        _F_: footnote     _W_: wiki-link      _R_: reference"
+                                 ("s" markdown-insert-bold)
+                                 ("e" markdown-insert-italic)
+                                 ("b" markdown-insert-blockquote :color blue)
+                                 ("p" markdown-insert-pre :color blue)
+                                 ("c" markdown-insert-code)
+                                 ("h" markdown-insert-header-dwim) 
+                                 ("1" markdown-insert-header-atx-1)
+                                 ("2" markdown-insert-header-atx-2)
+                                 ("3" markdown-insert-header-atx-3)
+                                 ("4" markdown-insert-header-atx-4)
+                                 ("m" markdown-insert-list-item)
+                                 ("l" markdown-promote)
+                                 ("r" markdown-demote)
+                                 ("d" markdown-move-down)
+                                 ("u" markdown-move-up)  
+                                 ("L" markdown-insert-link :color blue)
+                                 ("U" markdown-insert-uri :color blue)
+                                 ("F" markdown-insert-footnote :color blue)
+                                 ("W" markdown-insert-wiki-link :color blue)
+                                 ("R" markdown-insert-reference-link-dwim :color blue)))
 
 (leaf go-mode
   :doc "Major mode for the Go programming language"
