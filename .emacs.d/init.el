@@ -62,6 +62,8 @@
   :custom '((user-full-name . "satake")
             (user-mail-address . "satake.ts@gmail.com")
             (user-login-name . "satake")
+            (gc-cons-threshold . 134217728) ;;(* 128 1024 1024)
+            (read-process-output-max . 3145728) ;;(* 3 1024 1024)
             (create-lockfiles . nil)
             (debug-on-error . t)
             (init-file-debug . t)
@@ -80,10 +82,7 @@
             (scroll-bar-mode . nil)
             (indent-tabs-mode . nil)
             (next-screen-context-lines . 10)
-            (tab-width . 4)
-            (gc-cons-threshold . 134217728) ;;(* 128 1024 1024)
-            (read-process-output-max . 3145728) ;;(* 3 1024 1024)
-            )
+            (tab-width . 4))
   :config
   (defalias 'yes-or-no-p 'y-or-n-p)
   (set-face-attribute 'default nil
@@ -202,7 +201,19 @@
   :doc "interface for display-line-numbers"
   :tag "builtin"
   :added "2020-10-17"
-  :global-minor-mode global-display-line-numbers-mode)
+  :global-minor-mode global-display-line-numbers-mode
+  :config
+  (defcustom display-line-numbers-exempt-modes '(vterm-mode eshell-mode shell-mode term-mode ansi-term-mode dired-mode lsp-ui-imenu-mode)
+    "Major modes on which to disable the linum mode, exempts them from global requirement"
+    :group 'display-line-numbers
+    :type 'list
+    :version "green")
+  (defun display-line-numbers--turn-on ()
+    "turn on line numbers but excempting certain majore modes defined in `display-line-numbers-exempt-modes'"
+    (if (and
+         (not (member major-mode display-line-numbers-exempt-modes))
+         (not (minibufferp)))
+        (display-line-numbers-mode))))
 
 (leaf time
   :doc "display time, load and mail indicator in mode line of Emacs"
@@ -264,12 +275,6 @@
            (eshell-hist-ignoredups . t))
   :config
   (setq eshell-modules-list (delq 'eshell-ls (delq 'eshell-unix eshell-modules-list))))
-
-(leaf browse-url
-  :doc "pass a URL to a WWW browser"
-  :tag "builtin"
-  :added "2020-10-24"
-  :custom ((browse-url-browser-function . eww-browse-url)))
 
 (leaf org
   :doc "Export Framework for Org Mode"
@@ -359,7 +364,7 @@
   :tag "input method" "multilingual" "mule"
   :added "2020-09-30"
   :ensure t
-  :custom ((default-input-method . "japanese-mozc")))
+  :custom (default-input-method . "japanese-mozc"))
 
 (leaf which-key
   :doc "Display available keybindings in popup"
@@ -431,7 +436,7 @@
              ("C-c b" . counsel-bookmark)
              ("C-c d" . counsel-descbinds))
       :custom `((ivy-count-format . "(%d/%d) ")
-                (counsel-yank-pop-separator . "\n----------\n")
+                (counsel-yank-pop-preselect-last . t)
                 (counsel-find-file-ignore-regexp . ,(rx-to-string '(or "./" "../") 'no-group)))
       :global-minor-mode t)))
 
@@ -590,19 +595,6 @@
          (lisp-interaction-mode-hook . enable-paredit-mode)
          (scheme-mode-hook . enable-paredit-mode)))
 
-(leaf lsp-python-ms
-  :doc "The lsp-mode client for Microsoft python-language-server"
-  :req "emacs-25.1" "lsp-mode-6.1"
-  :tag "tools" "languages" "emacs>=25.1"
-  :added "2020-12-22"
-  :url "https://github.com/emacs-lsp/lsp-python-ms"
-  :emacs>= 25.1
-  :ensure t
-  :init (setq lsp-python-ms-auto-install-server t)
-  :hook ((python-mode . (lambda ()
-                          (require 'lsp-python-ms)
-                          (lsp)))))
-
 (leaf lsp-mode
   :doc "LSP mode"
   :req "emacs-26.1" "dash-2.14.1" "dash-functional-2.14.1" "f-0.20.0" "ht-2.0" "spinner-1.7.3" "markdown-mode-2.3" "lv-0"
@@ -637,6 +629,7 @@
                     ("M-r" lsp-restart-workspace)
                     ("S" lsp-shutdown-workspace))
   :hook ((lsp-mode-hook . lsp-enable-which-key-integration)
+         (lsp-managed-hook . (lambda () (setq-local company-backends '(company-capf))))
          (go-mode-hook . lsp-deferred))
   :custom ((lsp-file-watch-threshold . 10000)))
 
@@ -661,6 +654,19 @@
   :emacs>= 25.1
   :ensure t
   :after lsp-mode)
+
+(leaf lsp-python-ms
+  :doc "The lsp-mode client for Microsoft python-language-server"
+  :req "emacs-25.1" "lsp-mode-6.1"
+  :tag "tools" "languages" "emacs>=25.1"
+  :added "2020-12-22"
+  :url "https://github.com/emacs-lsp/lsp-python-ms"
+  :emacs>= 25.1
+  :ensure t
+  :init (setq lsp-python-ms-auto-install-server t)
+  :hook ((python-mode-hook . (lambda ()
+                               (require 'lsp-python-ms)
+                               (lsp)))))
 
 (leaf markdown-mode
   :doc "Major mode for Markdown-formatted text"
@@ -706,8 +712,7 @@ Links, footnotes  C-c C-a    _L_: link          _U_: uri        _F_: footnote   
   :url "https://github.com/dominikh/go-mode.el"
   :ensure t
   :hook ((before-save-hook . gofmt-before-save))
-  :setq ((company-backends '(company-capf))
-         (gofmt-command . "goimports")))
+  :setq ((gofmt-command . "goimports")))
 
 (leaf yaml-mode
   :doc "Major mode for editing YAML files"
@@ -768,7 +773,8 @@ Links, footnotes  C-c C-a    _L_: link          _U_: uri        _F_: footnote   
     :tag "out-of-MELPA" "convenience"
     :added "2020-10-04"
     :url "https://github.com/atykhonov/google-translate"
-    :require t))
+    :require t)
+  (defun google-translate--search-tkk () (list 430675 2721866130)))
 
 (leaf popup
   :doc "Visual Popup User Interface"
