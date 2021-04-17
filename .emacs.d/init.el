@@ -276,6 +276,12 @@
   :config
   (setq eshell-modules-list (delq 'eshell-ls (delq 'eshell-unix eshell-modules-list))))
 
+(leaf browse-url
+  :doc "pass a URL to a WWW browser"
+  :tag "builtin"
+  :added "2020-10-24"
+  :custom ((browse-url-browser-function . eww-browse-url)))
+
 (leaf org
   :doc "Export Framework for Org Mode"
   :tag "builtin"
@@ -654,6 +660,18 @@
   :emacs>= 25.1
   :ensure t
   :after lsp-mode)
+
+(leaf ccls
+  :doc "ccls client for lsp-mode"
+  :req "emacs-25.1" "lsp-mode-6.3.1" "dash-2.14.1"
+  :tag "c++" "lsp" "languages" "emacs>=25.1"
+  :added "2021-02-11"
+  :url "https://github.com/MaskRay/emacs-ccls"
+  :emacs>= 25.1
+  :ensure t
+  :custom ((ccls-executable . "~/.guix-profile/bin/ccls"))
+  :hook ((c-mode-hook . (lambda () (require 'ccls) (lsp)))
+         (c++-mode-hook . (lambda () (require 'ccls) (lsp)))))
 
 (leaf lsp-python-ms
   :doc "The lsp-mode client for Microsoft python-language-server"
