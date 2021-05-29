@@ -1,0 +1,31 @@
+# X11 forward
+Host Windows
+1. VcXsrvをインストールする
+2. Puttyをインストールする
+3. Puttyのカギを作成する
+4. PuttyのカギをゲストOSに登録する
+5. Puttyでssh接続の設定を作成する
+6. ssh接続の下記設定にチェックを付ける
+   [Connection] > [SSH] > [X11] > [Enable X11 forwarding]
+7. 文字をきれいに表示する
+   高いDPIスケールの動作を上書きします。
+   アイコンを右クリック > [プロパティ] > [互換性] > [高DPI設定の変更] > [高いDPIスケールの動作を上書きします]にチェック
+   https://qiita.com/LeftLetter/items/0eda1834a46c3b3bff60#スケーリング設定
+8. VcXsrvを起動する
+9. Puttyを起動する
+
+Guest Linux
+1. /etc/ssh/sshd_config の X11Forwarding を yes にする
+2. sshdを再起動する
+3. xauthをインストールする
+4. emacsをインストールする
+   https://emacs-jp.github.io/tips/install-emacs#make
+#+begin_src 
+apt install -y build-essential
+apt build-dep -y emacs
+apt install -y libjansson-dev
+
+./autogen.sh
+./configure --with-native-compilation --with-modules
+make -j$(nproc) && make install
+#+end_src
