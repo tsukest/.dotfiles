@@ -122,10 +122,9 @@
   :bind ("<f6>" . hydra-window-size/body)
   :hydra (hydra-window-size ()
                             "window"
-                            ("f" enlarge-window-horizontally "enlarge horizontally")
-                            ("b" shrink-window-horizontally "shrink horizontally")
-                            ("p" shrink-window "shrink vertically")
-                            ("n" enlarge-window "enlarge vertically")))
+                            ("^" enlarge-window "enlarge vertically")
+                            ("{" shrink-window-horizontally "shrink horizontally")
+                            ("}" enlarge-window-horizontally "enlarge horizontally")))
 
 (leaf tab-bar
   :doc "frame-local tabs with named persistent window configurations"
