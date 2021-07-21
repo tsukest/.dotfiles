@@ -368,7 +368,12 @@
   :tag "input method" "multilingual" "mule"
   :added "2020-09-30"
   :ensure t
-  :custom (default-input-method . "japanese-mozc"))
+  :custom ((default-input-method . "japanese-mozc-im")
+           (mozc-candidate-style . 'echo-area))
+  :config
+  (leaf mozc-im
+    :ensure t
+    :require t))
 
 (leaf which-key
   :doc "Display available keybindings in popup"
