@@ -689,6 +689,15 @@
                                (require 'lsp-python-ms)
                                (lsp)))))
 
+(leaf dap-mode
+  :after lsp-mode
+  :ensure t
+  :hook (dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))
+  :config
+  (require 'dap-ui)
+  (require 'dap-hydra)
+  (require 'dap-go))
+
 (leaf markdown-mode
   :doc "Major mode for Markdown-formatted text"
   :req "emacs-25.1"
