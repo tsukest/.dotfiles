@@ -76,7 +76,6 @@
             (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
             (ring-bell-function . 'ignore)
             (text-quoting-style . 'straight)
-            (truncate-lines . t)
             (menu-bar-mode . nil)
             (tool-bar-mode . nil)
             (scroll-bar-mode . nil)
