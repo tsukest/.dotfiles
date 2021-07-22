@@ -274,11 +274,9 @@
   :config
   (setq eshell-modules-list (delq 'eshell-ls (delq 'eshell-unix eshell-modules-list))))
 
-(leaf browse-url
-  :doc "pass a URL to a WWW browser"
+(leaf eww
   :tag "builtin"
-  :added "2020-10-24"
-  :custom ((browse-url-browser-function . eww-browse-url)))
+  :custom ((browse-url-browser-function . #'eww-browse-url)))
 
 (leaf org
   :doc "Export Framework for Org Mode"
