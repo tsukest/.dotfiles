@@ -341,12 +341,8 @@
   :url "https://github.com/hlissner/emacs-doom-theme"
   :emacs>= 25.1
   :ensure t
-  :custom-face
-  (tab-bar . '((t (:background "#282a36"))))
-  (tab-bar-tab . '((t (:background "#1E2029"))))
-  (tab-bar-tab-inactive . '((t (:foreground "#6272a4" :background "#282a36"))))
   :config
-  (load-theme 'doom-dracula t)
+  (load-theme 'doom-one t)
   (doom-themes-org-config))
 
 (leaf doom-modeline
